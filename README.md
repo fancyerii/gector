@@ -93,6 +93,34 @@ Among parameters:
 - `special_tokens_fix` to reproduce some reported results of pretrained models
 
 For evaluation use [M^2Scorer](https://github.com/nusnlp/m2scorer) and [ERRANT](https://github.com/chrisjbryant/errant).
+
+## 预测
+
+因为去amazon下载模型文件非常慢，所以我提前把模型上传到百度网盘。链接: https://pan.baidu.com/s/19h00PuGxqrA64f_Z2XN2tg 提取码: puw2。下载后的目录应该是xlnetmodel，然后需要hack一下代码的路径，需要把412行改成你的绝对路径：
+```
++        #hack
++        model_path = pretrained_model
++        if model_path == 'xlnet-base-cased':
++            model_path='/home/lili/codes/gector/xlnetmodel'
++
+         bert_tokenizer = AutoTokenizer.from_pretrained(
+         -            pretrained_model, do_lower_case=do_lowercase, do_basic_tokenize=False)
+         +            model_path, do_lower_case=do_lowercase, do_basic_tokenize=False)
+
+```
+另外我用pytorch 1.3.0出现pytorch Process finished with exit code 139 (interrupted by signal 11: SIGSEGV)。升级到1.5.0就行了。因此可以：
+
+```
+pip uninstall torch
+然后去官网根据gpu/cpu选择合适的1.5.0
+```
+
+运行：
+
+```
+python predict.py --model_path xlnetmodel/xlnet_0_gector.th --input_file test --output_file out --transformer_model xlnet --special_tokens_fix 0
+```
+
 ## Citation
 If you find this work is useful for your research, please cite our paper:
 ```
